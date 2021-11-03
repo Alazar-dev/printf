@@ -63,4 +63,4 @@
 ## Authors
 * [Alazar Tadesse](https://github.com/Alazar-dev)
 
-* [Eyerusalem Semu](https://github.com/tasha984288)
+* [Reji Semu](https://github.com/tasha984288)
