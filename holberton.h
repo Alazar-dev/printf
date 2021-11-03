@@ -1,32 +1,22 @@
-#ifndef _HOLBERTON_H_
-#define _HOLBERTON_H_
+#ifndef HOLBERTON_H
+#define HOLBERTON_H
 
+#include <stdlib.h>
+#include <unistd.h>
 #include <stdarg.h>
-/**
- * struct print - structure for printing various types
- * @t: type to print
- * @f: function to print
- */
-typedef struct print
-{
-	char *t;
-	int (*f)(va_list);
-} print_t;
 
 int _putchar(char c);
 int _printf(const char *format, ...);
-int print_c(va_list c);
-int print_s(va_list s);
-int print_i(va_list i);
-int print_d(va_list d);
-int print_u(va_list u);
-int print_b(va_list b);
-int print_o(va_list o);
-int print_x(va_list x);
-int print_X(va_list X);
-int print_p(va_list p);
-int print_S(va_list S);
-int print_r(va_list r);
-int print_R(va_list R);
+int print_num(long int n);
+int print_string(char *str);
+int print_binary(unsigned int num);
+int print_unknown_spec(char c);
+int print_odh(char c, unsigned int num);
+int dec_to_oct(unsigned int num);
+int dec_to_hex(char c, unsigned int num);
+int print_S(char *);
+int print_reverse(char *s);
+int print_rot13(char *c);
+int print_pointer(void *p);
 
-#endif  /* _HOLBERTON_H */
+#endif /* HOLBERTON_H */

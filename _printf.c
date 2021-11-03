@@ -1,85 +1,54 @@
 #include "holberton.h"
-#include <stdlib.h>
-
 
 /**
- * check_for_specifiers - checks if there is a valid format specifier
- * @format: possible format specifier
+ * _printf - Function that prints formatted output.
  *
- * Return: pointer to valid function or NULL
- */
-static int (*check_for_specifiers(const char *format))(va_list)
-{
-	unsigned int i;
-	print_t p[] = {
-		{"c", print_c},
-		{"s", print_s},
-		{"i", print_i},
-		{"d", print_d},
-		{"u", print_u},
-		{"b", print_b},
-		{"o", print_o},
-		{"x", print_x},
-		{"X", print_X},
-		{"p", print_p},
-		{"S", print_S},
-		{"r", print_r},
-		{"R", print_R},
-		{NULL, NULL}
-	};
-
-	for (i = 0; p[i].t != NULL; i++)
-	{
-		if (*(p[i].t) == *format)
-		{
-			break;
-		}
-	}
-	return (p[i].f);
-
-}
-
-/**
- * _printf - prints anything
- * @format: list of argument types passed to the function
+ * @format: a string composed of zero or more characters to print or use as
+ * directives that handle subsequent arguments and special characters.
  *
- * Return: number of characters printed
+ * Description: This function can take a variable number and type of arguments
+ * that should be printed to standard output.
+ *
+ * Return: int
  */
 int _printf(const char *format, ...)
 {
-	unsigned int i = 0, count = 0;
-	va_list valist;
-	int (*f)(va_list);
+	va_list args;
+	int i = 0, chars_printed = 0;
 
-	if (format == NULL)
-		return (-1);
-
-	va_start(valist, format);
-	while (format[i])
+	va_start(args, format);
+	while (format && format[i])
 	{
-		for (; format[i] != '%' && format[i]; i++)
+		if (format[i] != '%')
 		{
-			_putchar(format[i]);
-			count++;
+			chars_printed += _putchar(format[i]);
 		}
-		if (!format[i])
-			return (count);
-		f = check_for_specifiers(&format[i + 1]);
-		if (f != NULL)
+		else if (format[i + 1])
 		{
-			count += f(valist);
-			i += 2;
-			continue;
-		}
-		if (!format[i + 1])
-			return (-1);
-		_putchar(format[i]);
-		count++;
-		if (format[i + 1] == '%')
-			i += 2;
-		else
 			i++;
+			if (format[i] == 'c' || format[i] == 's')
+				chars_printed += format[i] == 'c' ? _putchar(va_arg(args, int)) :
+				print_string(va_arg(args, char *));
+			else if (format[i] == 'd' || format[i] == 'i')
+				chars_printed += print_num(va_arg(args, int));
+			else if (format[i] == 'b')
+				chars_printed += print_binary((unsigned int)va_arg(args, int));
+			else if (format[i] == 'r')
+				chars_printed += print_reverse(va_arg(args, char *));
+			else if (format[i] == 'R')
+				chars_printed += print_rot13(va_arg(args, char *));
+			else if (format[i] == 'o' || format[i] == 'u' ||
+			format[i] == 'x' || format[i] == 'X')
+				chars_printed += print_odh(format[i], (unsigned int)va_arg(args, int));
+			else if (format[i] == 'S')
+				chars_printed += print_S(va_arg(args, char *));
+			else if (format[i] == 'p')
+				chars_printed += print_pointer(va_arg(args, void *));
+			else
+				chars_printed += print_unknown_spec(format[i]);
+		}
+		i++;
 	}
-	va_end(valist);
-	return (count);
+	va_end(args);
+	return (chars_printed);
 }
